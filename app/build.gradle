@@ -73,6 +73,6 @@ dependencies {
     /* ******* 工程依赖 ******** */
     //api 'com.github.yinhaide:HDMediaPlayer:0.0.3'
     api project(':mediaplayer')
-    // 架构包,单Activity多Fragment框架(https://github.com/yinhaide/Rocket-master),想要Android进阶的童鞋，非常值得推荐学习~
-    api 'com.github.yinhaide:Rocket-master:0.0.4'
+    // 架构包,单Activity多Fragment框架(https://github.com/yinhaide/HDRocket),想要Android进阶的童鞋，非常值得推荐学习~
+    api 'com.github.yinhaide:HDRocket:0.0.4'
 }

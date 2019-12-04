@@ -31,7 +31,7 @@ allprojects {
 ```
 在应用级别的**build.gradle**添加
 ```
-api 'com.github.yinhaide:HDMediaPlayer:0.0.3'
+api 'com.github.yinhaide:HDMediaPlayer:0.0.4'
 ```
 
 ### 如何使用
@@ -109,7 +109,7 @@ public void surfaceCreated(SurfaceHolder holder) {
 > 都看到这里了，如果觉得写的可以或者对你有帮助的话，顺手给个星星点下Star~
 
 这个控件内部采用一个Fragment框架，如果有兴趣的话可以去了解一下
-+ [https://github.com/yinhaide/Rocket-master](https://github.com/yinhaide/Rocket-master)
++ [https://github.com/yinhaide/HDRocket](https://github.com/yinhaide/HDRocket)
 
 ## 关于我
 + **Email:** [123302687@qq.com](123302687@qq.com)
