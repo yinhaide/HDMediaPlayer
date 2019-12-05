@@ -18,7 +18,7 @@ import com.yhd.mediaplayer.app.R;
 public class Frag_mediaplayer extends RoFragment {
 
     private static final String TAG="MainActivity";
-    private final static String URL="http://qiniucdn.wenshanhu.com/3043d83491eaef0823a7b7b2f6b07e56.mp4";
+    private final static String URL="https://github.com/yinhaide/HDMediaPlayer/blob/master/app/src/main/assets/test.mp4";
 
     @BindView(R.id.surfaceView)
     private SurfaceView surfaceView;
@@ -34,43 +34,38 @@ public class Frag_mediaplayer extends RoFragment {
                 .getInstance()              //单例
                 .setSurfaceView(surfaceView)//设置预览区域
                 .setProgressInterval(1000)  //设置进度回调间隔
-                .setMediaPlayerHelperCallBack((state, mediaPlayerHelper, args) -> {
+                .setOnStatusCallbackListener((state, args) -> {
                     Log.v(TAG,"--"+state.toString());
                     if(state == MediaPlayerHelper.CallBackState.PROGRESS){
                         if(args.length > 0){
-                            int percent=(int)args[0];
-                            activity.runOnUiThread(() -> toast("进度:"+percent+"%"));
+                            toast("进度:"+args[0]+"%");
                         }
                     }else if(state== MediaPlayerHelper.CallBackState.COMPLETE){
                         MediaPlayerHelper.getInstance().playAsset(activity,"test.mp4");
                     }else if(state== MediaPlayerHelper.CallBackState.BUFFER_UPDATE){
                         if(args.length > 1){
-                            int percent=(int)args[1];
-                            activity.runOnUiThread(() -> toast("网络缓冲:"+percent+"%"));
+                            toast("网络缓冲:"+args[1]+"%");
                         }
                     }else if(state== MediaPlayerHelper.CallBackState.EXCEPTION){
                         if(args.length > 0){
-                            String exception = (String) args[0];
-                            activity.runOnUiThread(() -> toast("播放异常:" + exception));
+                            toast("播放异常:" + args[0]);
                         }
                     }else if(state== MediaPlayerHelper.CallBackState.ERROR){
                         if(args.length > 0){
-                            String error = (String) args[0];
-                            activity.runOnUiThread(() -> toast("播放错误:" + error));
+                            toast("播放错误:" + args[0]);
                         }
                     }else if(state== MediaPlayerHelper.CallBackState.PREPARE){
                         if(args.length > 0){
-                            String prepareString = (String) args[0];
-                            activity.runOnUiThread(() -> toast("视频准备好了:" + prepareString));
+                            activity.runOnUiThread(() -> toast("视频准备好了:" + args[0]));
                         }
                     }
-        });
+                })
+                .playAsset(activity,"test.mp4");//开始播放
     }
 
     @Override
     public void onNexts(Object object) {
-        //放在队列中播放的目的是等待Surface准备好才能播放，不然会有黑屏，也可以监听PREPARE回调再播放
-        new Handler().post(() -> MediaPlayerHelper.getInstance().playAsset(activity,"test.mp4"));
+
     }
 
     @Event(R.id.assetsMP3Button)
@@ -85,7 +80,7 @@ public class Frag_mediaplayer extends RoFragment {
 
     @Event(R.id.urlButton)
     private void playNetMP4(View view){
-        new Handler().post(() -> MediaPlayerHelper.getInstance().playUrl(URL));
+        MediaPlayerHelper.getInstance().playUrl(URL);
     }
 
     @Event(R.id.stopButton)
@@ -105,9 +100,7 @@ public class Frag_mediaplayer extends RoFragment {
 
     public void onStop(){
         super.onStop();
-        if(MediaPlayerHelper.getInstance().getMediaPlayer()!=null){
-            MediaPlayerHelper.getInstance().getMediaPlayer().stop();
-        }
+        MediaPlayerHelper.getInstance().stop();
     }
 
     @Override
