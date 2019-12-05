@@ -31,11 +31,10 @@ public class Frag_mediaplayer extends RoFragment {
     @Override
     public void initViewFinish(View inflateView) {
         MediaPlayerHelper
-                .getInstance()
-                .setSurfaceView(surfaceView)
-                .setProgressInterval(1000)
+                .getInstance()              //单例
+                .setSurfaceView(surfaceView)//设置预览区域
+                .setProgressInterval(1000)  //设置进度回调间隔
                 .setMediaPlayerHelperCallBack((state, mediaPlayerHelper, args) -> {
-
                     Log.v(TAG,"--"+state.toString());
                     if(state == MediaPlayerHelper.CallBackState.PROGRESS){
                         if(args.length > 0){
@@ -70,6 +69,7 @@ public class Frag_mediaplayer extends RoFragment {
 
     @Override
     public void onNexts(Object object) {
+        //放在队列中播放的目的是等待Surface准备好才能播放，不然会有黑屏，也可以监听PREPARE回调再播放
         new Handler().post(() -> MediaPlayerHelper.getInstance().playAsset(activity,"test.mp4"));
     }
 
