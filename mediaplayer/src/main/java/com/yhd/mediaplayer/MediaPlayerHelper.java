@@ -5,7 +5,6 @@ import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -91,11 +90,11 @@ public class MediaPlayerHelper{
     }
 
     /**
-     * 通过Assets文件名播放Assets目录下的文件
+     * 通过Assets文件名播放Assets目录下视频
      * @param context 引用
      * @param assetName 名字,带后缀，比如:text.mp3
      */
-    public void playAsset (Context context, String assetName) {
+    public void playAssetVideo (Context context, String assetName) {
         if(!checkAvalable(assetName)){
             onStatusCallbackNext(CallBackState.FORMATE_NOT_SURPORT, assetName);
             return;
@@ -105,6 +104,19 @@ public class MediaPlayerHelper{
         }else{
             setOnHolderCreateListener(() -> beginPlayAsset(context,assetName));
         }
+    }
+
+    /**
+     * 通过Assets文件名播放Assets目录下的音频
+     * @param context 引用
+     * @param assetName 名字,带后缀，比如:text.mp3
+     */
+    public void playAssetMusic (Context context, String assetName) {
+        if(!checkAvalable(assetName)){
+            onStatusCallbackNext(CallBackState.FORMATE_NOT_SURPORT, assetName);
+            return;
+        }
+        beginPlayAsset(context,assetName);
     }
 
     /**

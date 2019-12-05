@@ -60,7 +60,7 @@ public class Frag_mediaplayer extends RoFragment {
                         }
                     }
                 })
-                .playAsset(activity,"test.mp4");//开始播放
+                .playAssetVideo(activity,"test.mp4");//开始播放
     }
 
     @Override
@@ -70,12 +70,12 @@ public class Frag_mediaplayer extends RoFragment {
 
     @Event(R.id.assetsMP3Button)
     private void playassetMP3(View view){
-        MediaPlayerHelper.getInstance().playAsset(activity,"test.mp3");
+        MediaPlayerHelper.getInstance().playAssetMusic(activity,"test.mp3");
     }
 
     @Event(R.id.assetsMP4Button)
     private void playAssetMP4(View view){
-        MediaPlayerHelper.getInstance().playAsset(activity,"test.mp4");
+        MediaPlayerHelper.getInstance().playAssetVideo(activity,"test.mp4");
     }
 
     @Event(R.id.urlButton)
@@ -95,7 +95,7 @@ public class Frag_mediaplayer extends RoFragment {
 
     @Event(R.id.resetButton)
     private void reset(View view){
-        MediaPlayerHelper.getInstance().playAsset(activity,"test.mp4");
+        MediaPlayerHelper.getInstance().playAssetVideo(activity,"test.mp4");
     }
 
     public void onStop(){

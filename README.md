@@ -15,7 +15,7 @@
 
 + **支持播放Assets目录下的音频、视频**
 
-+ **支持播放网络网络流媒体(仅限上述格式)**
++ **支持播放网络流媒体(仅限上述格式)**
 
 ## 如何快速集成
 
@@ -31,7 +31,7 @@ allprojects {
 ```
 在应用级别的**build.gradle**添加
 ```
-api 'com.github.yinhaide:HDMediaPlayer:0.0.8'
+api 'com.github.yinhaide:HDMediaPlayer:0.0.9'
 ```
 
 ### 如何使用
@@ -39,14 +39,14 @@ api 'com.github.yinhaide:HDMediaPlayer:0.0.8'
 * 一行代码实现播放Assets目录下的mp4:
 
 ```
-MediaPlayerHelper.getInstance().setSurfaceView(surfaceView).playAsset(context,"test.mp4");
+MediaPlayerHelper.getInstance().setSurfaceView(surfaceView).playAssetVideo(context,"test.mp4");
 ```
 
 
 * 一行代码实现播放Assets目录下的mp3:
 
 ```
-MediaPlayerHelper.getInstance().playAsset(context,"test.mp3");
+MediaPlayerHelper.getInstance().playAssetMusic(context,"test.mp3");
 ```
 
 * 一行代码实现播放网络流媒体或者本地全路径流媒体:
@@ -55,15 +55,16 @@ MediaPlayerHelper.getInstance().playAsset(context,"test.mp3");
 /**
  * urlString 可为网络流媒体连接，也可以为本地存储全路径链接
  */
-MediaPlayerHelper.getInstance().setSurfaceView(surfaceView).play(urlString);
+MediaPlayerHelper.getInstance().setSurfaceView(surfaceView).playLocal(urlString);
+MediaPlayerHelper.getInstance().setSurfaceView(surfaceView).playUrl(urlString);
 ```
 
 * 如果想得到详细的回调信息：
 
 ```
-MediaPlayerHelper.getInstance().setMediaPlayerHelperCallBack(new MediaPlayerHelper.MediaPlayerHelperCallBack() {
+MediaPlayerHelper.getInstance().setOnStatusMediaCallBack(new MediaPlayerHelper.MediaPlayerHelperCallBack() {
     @Override
-    public void onCallBack(MediaPlayerHelper.CallBackState state, MediaPlayerHelper mediaPlayerHelper, Object... args) {
+    public void onCallBack(MediaPlayerHelper.CallBackState state, Object... args) {
         Log.v(TAG,"--"+state.toString());
         if(state== MediaPlayerHelper.CallBackState.PROGRESS){
             int percent=(int)args[0];
