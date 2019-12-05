@@ -153,12 +153,28 @@ public class MediaPlayerHelper{
     }
 
     /**
+     * 重新创建MediaPlayer
+     */
+    public void reCreateMediaPlayer() {
+        if(uiHolder.player != null){
+            if(uiHolder.player.isPlaying()){
+                uiHolder.player.stop();
+            }
+            uiHolder.player.release();
+            uiHolder.player = new MediaPlayer();
+        }else{
+            uiHolder.player = new MediaPlayer();
+        }
+        initPlayerListener();
+    }
+
+    /**
      * 设置SurfaceView
      * @param surfaceView 控件
      * @return 类对象
      */
     public MediaPlayerHelper setSurfaceView (SurfaceView surfaceView) {
-        if(surfaceView==null){
+        if(surfaceView == null){
             onStatusCallbackNext(CallBackState.SURFACEVIEW_NULL, uiHolder.player);
         }else {
             uiHolder.surfaceView = surfaceView;
@@ -187,6 +203,7 @@ public class MediaPlayerHelper{
 
                 @Override
                 public void surfaceDestroyed(SurfaceHolder holder) {
+                    isHolderCreate = false;
                     onStatusCallbackNext(CallBackState.SURFACEVIEW_DESTROY,holder);
                 }
             });
@@ -203,6 +220,13 @@ public class MediaPlayerHelper{
         }
         this.uiHolder = new Holder();
         uiHolder.player = new MediaPlayer();
+        initPlayerListener();
+    }
+
+    /**
+     * 时间监听
+     */
+    private void initPlayerListener(){
         uiHolder.player.setOnCompletionListener(mp -> {
             onStatusCallbackNext(CallBackState.PROGRESS, 100);
             onStatusCallbackNext(CallBackState.COMPLETE, mp);
