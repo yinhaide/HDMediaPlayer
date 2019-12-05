@@ -155,9 +155,9 @@ public class MediaPlayerHelper implements
             uiHolder.player.setDisplay(null);
             uiHolder.player.reset();
             uiHolder.player.setDataSource(uiHolder.assetDescriptor.getFileDescriptor(), uiHolder.assetDescriptor.getStartOffset(), uiHolder.assetDescriptor.getLength());
-            uiHolder.player.prepare();
+            uiHolder.player.prepareAsync();
         } catch (Exception e) {
-            callBack(CallBackState.ERROR, uiHolder.player);
+            callBack(CallBackState.ERROR, e.toString());
             return false;
         }
         return true;
@@ -193,7 +193,7 @@ public class MediaPlayerHelper implements
             uiHolder.player.setDataSource(url);
             uiHolder.player.prepareAsync();
         } catch (Exception e) {
-            callBack(CallBackState.ERROR, uiHolder.player);
+            callBack(CallBackState.ERROR, e.toString());
             return false;
         }
         return true;
@@ -234,7 +234,7 @@ public class MediaPlayerHelper implements
     Runnable refress_time_Thread = new Runnable(){
         public void run() {
             refress_time_handler.removeCallbacks(refress_time_Thread);
-            if(uiHolder.player!=null&&uiHolder.player.isPlaying()){
+            if(uiHolder.player != null && uiHolder.player.isPlaying()){
                 int duraction = uiHolder.player.getDuration();
                 if(duraction > 0){
                     callBack(CallBackState.PROGRESS, 100*uiHolder.player.getCurrentPosition()/duraction);
@@ -281,14 +281,22 @@ public class MediaPlayerHelper implements
     public void onPrepared(MediaPlayer mp) {
         try {
             if(uiHolder.surfaceView!=null) {
+                //解决部分机型/电视播放的时候有声音没画面的情况
+                uiHolder.surfaceView.post(() -> uiHolder.surfaceHolder.setFixedSize(uiHolder.surfaceView.getWidth(),uiHolder.surfaceView.getHeight()));
+                //设置预览区域
                 uiHolder.player.setDisplay(uiHolder.surfaceHolder);
             }
             uiHolder.player.start();
             refress_time_handler.postDelayed(refress_time_Thread, delaySecondTime);
         } catch (Exception e) {
-            callBack(CallBackState.EXCEPTION,mp);
+            callBack(CallBackState.EXCEPTION,e.toString());
         }
-        callBack(CallBackState.PREPARE,mp);
+        String holderMsg = "holder -";
+        if(uiHolder.surfaceHolder != null){
+            holderMsg = holderMsg + " height："+uiHolder.surfaceHolder.getSurfaceFrame().height();
+            holderMsg = holderMsg + " width："+uiHolder.surfaceHolder.getSurfaceFrame().width();
+        }
+        callBack(CallBackState.PREPARE,holderMsg);
     }
 
     @Override
@@ -304,11 +312,11 @@ public class MediaPlayerHelper implements
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         if(uiHolder.player != null && holder != null){
-            uiHolder.player.setDisplay(holder);
             //解决部分机型/电视播放的时候有声音没画面的情况
             if(uiHolder.surfaceView != null){
                 uiHolder.surfaceView.post(() -> holder.setFixedSize(uiHolder.surfaceView.getWidth(),uiHolder.surfaceView.getHeight()));
             }
+            uiHolder.player.setDisplay(holder);
         }
         callBack(CallBackState.SURFACEVIEW_CREATE,holder);
     }

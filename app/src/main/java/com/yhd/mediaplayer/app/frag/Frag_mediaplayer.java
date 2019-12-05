@@ -49,6 +49,21 @@ public class Frag_mediaplayer extends RoFragment {
                             int percent=(int)args[1];
                             activity.runOnUiThread(() -> toast("网络缓冲:"+percent+"%"));
                         }
+                    }else if(state== MediaPlayerHelper.CallBackState.EXCEPTION){
+                        if(args.length > 0){
+                            String exception = (String) args[0];
+                            activity.runOnUiThread(() -> toast("播放异常:" + exception));
+                        }
+                    }else if(state== MediaPlayerHelper.CallBackState.ERROR){
+                        if(args.length > 0){
+                            String error = (String) args[0];
+                            activity.runOnUiThread(() -> toast("播放错误:" + error));
+                        }
+                    }else if(state== MediaPlayerHelper.CallBackState.PREPARE){
+                        if(args.length > 0){
+                            String prepareString = (String) args[0];
+                            activity.runOnUiThread(() -> toast("视频准备好了:" + prepareString));
+                        }
                     }
         });
     }
