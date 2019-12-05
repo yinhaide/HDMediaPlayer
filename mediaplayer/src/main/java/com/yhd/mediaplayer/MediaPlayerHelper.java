@@ -255,7 +255,6 @@ public class MediaPlayerHelper{
      * @param path 参数
      */
     private void beginPlayUrl(String path){
-        Log.v("yhd-","path:"+path);
         /*
          * 其实仔细观察优酷app切换播放网络视频时的确像是这样做的：先暂停当前视频，
          * 让mediaplayer与先前的surfaceHolder脱离“绑定”,当mediaplayer再次准备好要start时，
