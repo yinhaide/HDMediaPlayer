@@ -41,7 +41,7 @@ public class Frag_mediaplayer extends RoFragment {
                             toast("进度:"+args[0]+"%");
                         }
                     }else if(state== MediaPlayerHelper.CallBackState.COMPLETE){
-                        MediaPlayerHelper.getInstance().playAsset(activity,"test.mp4");
+                        //MediaPlayerHelper.getInstance().playAsset(activity,"test.mp4");
                     }else if(state== MediaPlayerHelper.CallBackState.BUFFER_UPDATE){
                         if(args.length > 1){
                             toast("网络缓冲:"+args[1]+"%");
