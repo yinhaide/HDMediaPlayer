@@ -18,7 +18,7 @@ import com.yhd.mediaplayer.app.R;
 public class Frag_mediaplayer extends RoFragment {
 
     private static final String TAG="MainActivity";
-    private final static String URL="https://github.com/yinhaide/HDMediaPlayer/blob/master/app/src/main/assets/test.mp4";
+    private final static String URL="https://github.com/yinhaide/HDMediaPlayer/blob/master/app/src/main/assets/demo.mp4";
 
     @BindView(R.id.surfaceView)
     private SurfaceView surfaceView;
