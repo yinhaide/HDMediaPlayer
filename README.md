@@ -31,7 +31,7 @@ allprojects {
 ```
 在应用级别的**build.gradle**添加
 ```
-api 'com.github.yinhaide:HDMediaPlayer:0.0.7'
+api 'com.github.yinhaide:HDMediaPlayer:0.0.8'
 ```
 
 ### 如何使用
@@ -104,7 +104,7 @@ public void surfaceCreated(SurfaceHolder holder) {
     ...
 }
 ```
-**2、底端机型只能播放一次，下次再次播放直接黑屏**
+**3、低配置机型只能播放一次，下次再次播放直接黑屏**
 > 部分底端机型(小米电视32寸1G+4G配置)，只能播放一次，第二次尝试柏昂都是失败的。解决办法：每次播放之前需要释放之前的MediaPlayer，重新创建新的对象。MediaPlayer需要比较多的内存，特别是低端机出问题的时候尝试释放资源再重新创建是有效的。
 
 ## 这个项目会持续更新中... 
