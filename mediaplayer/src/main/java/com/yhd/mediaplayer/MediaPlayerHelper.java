@@ -234,11 +234,15 @@ public class MediaPlayerHelper implements
     Runnable refress_time_Thread = new Runnable(){
         public void run() {
             refress_time_handler.removeCallbacks(refress_time_Thread);
-            if(uiHolder.player != null && uiHolder.player.isPlaying()){
-                int duraction = uiHolder.player.getDuration();
-                if(duraction > 0){
-                    callBack(CallBackState.PROGRESS, 100*uiHolder.player.getCurrentPosition()/duraction);
+            try {
+                if(uiHolder.player != null && uiHolder.player.isPlaying()){
+                    int duraction = uiHolder.player.getDuration();
+                    if(duraction > 0){
+                        callBack(CallBackState.PROGRESS, 100*uiHolder.player.getCurrentPosition()/duraction);
+                    }
                 }
+            } catch (IllegalStateException e) {
+                callBack(CallBackState.EXCEPTION, e.toString());
             }
             refress_time_handler.postDelayed(refress_time_Thread,delaySecondTime);
         }
@@ -267,7 +271,8 @@ public class MediaPlayerHelper implements
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
-        callBack(CallBackState.ERROR, mp, what, extra);
+        String errorString  = "what:"+ what + " extra:" + extra;
+        callBack(CallBackState.ERROR, errorString);
         return false;
     }
 
