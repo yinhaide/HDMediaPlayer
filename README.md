@@ -110,6 +110,24 @@ public void surfaceCreated(SurfaceHolder holder) {
 ```
 mediaPlayerHelper.reCreateMediaPlayer();
 ```
+**4、低配置机型在播放完毕之后会黑屏**
+> 部分底端机型(天猫魔盒)，在视频播放完毕之后直接黑屏，而不是停留在最后一帧。解决办法就是不让它播放完毕，在播放到最后几十到一百毫秒的时候执行pause()操作。
+```
+//进度间隔
+mediaPlayerHelper.setProgressInterval(50);
+//进度回调
+mediaPlayerHelper.setOnStatusCallbackListener((state, args) -> {
+    if(state == MediaPlayerHelper.CallBackState.PROGRESS){
+        int videoDuration = mediaPlayerHelper.getMediaPlayer().getDuration();
+        int videoPositionDuration = mediaPlayerHelper.getMediaPlayer().getCurrentPosition();
+        int differ = videoDuration - videoPositionDuration;
+        //播放到左后前面指定时间停止，防止黑屏
+        if(differ < 180){
+            this.mediaPlayerHelper.getMediaPlayer().pause();
+        }
+    }
+});
+```
 
 ## 这个项目会持续更新中... 
 > 都看到这里了，如果觉得写的可以或者对你有帮助的话，顺手给个星星点下Star~
