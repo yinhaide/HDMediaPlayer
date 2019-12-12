@@ -3,10 +3,18 @@ package com.yhd.mediaplayer;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
+import android.media.MediaDataSource;
 import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * 多媒体播放
@@ -81,9 +89,9 @@ public class MediaPlayerHelper{
      * 通过文件路径播放音视频
      * @param localPath 路径
      */
-    public void playLocal(final String localPath) {
+    public void playLocal(Context context,final String localPath) {
         if(checkAvalable(localPath)){
-            playUrl(localPath);
+            playUrl(context,localPath);
         }else{
             onStatusCallbackNext(CallBackState.FORMATE_NOT_SURPORT, localPath);
         }
@@ -107,6 +115,19 @@ public class MediaPlayerHelper{
     }
 
     /**
+     * 播放流视频
+     * @param mediaDataSource mediaDataSource
+     */
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void playVideoDataSource (MediaDataSource mediaDataSource) {
+        if(isHolderCreate){
+            beginPlayDataSource(mediaDataSource);
+        }else{
+            setOnHolderCreateListener(() ->  beginPlayDataSource(mediaDataSource));
+        }
+    }
+
+    /**
      * 通过Assets文件名播放Assets目录下的音频
      * @param context 引用
      * @param assetName 名字,带后缀，比如:text.mp3
@@ -121,14 +142,14 @@ public class MediaPlayerHelper{
 
     /**
      * 网络路径播放音视频
-     * @param url 路径
+     * @param context 路径
      * @return 是否成功
      */
-    public void playUrl(final String url) {
+    public void playUrl(Context context,final String path) {
         if(isHolderCreate){
-            beginPlayUrl(url);
+            beginPlayUrl(context,path);
         }else{
-            setOnHolderCreateListener(() -> beginPlayUrl(url));
+            setOnHolderCreateListener(() -> beginPlayUrl(context,path));
         }
     }
 
@@ -290,7 +311,7 @@ public class MediaPlayerHelper{
      * 播放
      * @param path 参数
      */
-    private void beginPlayUrl(String path){
+    private void beginPlayUrl(Context context,String path){
         /*
          * 其实仔细观察优酷app切换播放网络视频时的确像是这样做的：先暂停当前视频，
          * 让mediaplayer与先前的surfaceHolder脱离“绑定”,当mediaplayer再次准备好要start时，
@@ -298,6 +319,7 @@ public class MediaPlayerHelper{
          * 注：MediaPlayer.setDisplay()的作用： 设置SurfaceHolder用于显示的视频部分媒体。
          */
         try {
+            //Uri url = Uri.fromFile(new File(path));
             uiHolder.player.setDisplay(null);
             uiHolder.player.reset();
             uiHolder.player.setDataSource(path);
@@ -324,6 +346,28 @@ public class MediaPlayerHelper{
             uiHolder.player.setDisplay(null);
             uiHolder.player.reset();
             uiHolder.player.setDataSource(uiHolder.assetDescriptor.getFileDescriptor(), uiHolder.assetDescriptor.getStartOffset(), uiHolder.assetDescriptor.getLength());
+            uiHolder.player.prepareAsync();
+        } catch (Exception e) {
+            onStatusCallbackNext(CallBackState.ERROR, e.toString());
+        }
+    }
+
+    /**
+     * 播放
+     * @param mediaDataSource 参数
+     */
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void beginPlayDataSource(MediaDataSource mediaDataSource){
+        /*
+         * 其实仔细观察优酷app切换播放网络视频时的确像是这样做的：先暂停当前视频，
+         * 让mediaplayer与先前的surfaceHolder脱离“绑定”,当mediaplayer再次准备好要start时，
+         * 再次让mediaplayer与surfaceHolder“绑定”在一起，显示下一个要播放的视频。
+         * 注：MediaPlayer.setDisplay()的作用： 设置SurfaceHolder用于显示的视频部分媒体。
+         */
+        try {
+            uiHolder.player.setDisplay(null);
+            uiHolder.player.reset();
+            uiHolder.player.setDataSource(mediaDataSource);
             uiHolder.player.prepareAsync();
         } catch (Exception e) {
             onStatusCallbackNext(CallBackState.ERROR, e.toString());
