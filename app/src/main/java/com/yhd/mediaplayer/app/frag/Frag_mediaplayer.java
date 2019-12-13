@@ -13,6 +13,7 @@ import com.yhd.mediaplayer.MediaPlayerHelper;
 import com.yhd.mediaplayer.app.R;
 import com.yhd.utils.EnDecryUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -109,8 +110,25 @@ public class Frag_mediaplayer extends RoFragment {
         try {
             InputStream inputStream = activity.getAssets().open("test.steam");
             byte[] videoBuffer = EnDecryUtil.toByteArray(inputStream);
-            MediaPlayerHelper.getInstance().playVideoDataSource(EnDecryUtil.deEncrypt(videoBuffer));
             inputStream.close();
+            int version = android.os.Build.VERSION.SDK_INT;
+            //如果会Android6.0及以上则解密流进行播放
+            if (version >= Build.VERSION_CODES.M) {
+                // 播放加密的视频流
+                MediaPlayerHelper.getInstance().playVideoDataSource(EnDecryUtil.deEncrypt(videoBuffer));
+            }else{
+                //如果是Android6.0以下，则先解密然后存到本地再播放
+                //为了不让用户看到，存缓存文件为.temp，名字唯一
+                String videoPath = "/mnt/sdcard/.temp";
+                File videoFile = new File(videoPath);
+                //将流解密存到本地
+                EnDecryUtil.writeToLocal(EnDecryUtil.deEncrypt(videoBuffer),videoPath);
+                if(videoFile.exists()){
+                    MediaPlayerHelper.getInstance().playUrl(activity,videoPath);
+                }else{
+                    MediaPlayerHelper.getInstance().playAssetVideo(activity,"test.mp4");
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
