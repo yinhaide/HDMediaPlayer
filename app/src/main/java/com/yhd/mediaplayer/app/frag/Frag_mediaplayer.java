@@ -101,14 +101,13 @@ public class Frag_mediaplayer extends RoFragment {
         MediaPlayerHelper.getInstance().getMediaPlayer().start();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Event(R.id.encryButton)
     private void encry(View view){
         //写入加密字节流到指定文件
         //byte[] videoBuffer = EnDecryUtil.deEncrypt("/mnt/sdcard/test.mp4");
-        //EnDecryUtil.writeToLocal(videoBuffer,"/mnt/sdcard/test.steam");
+        //EnDecryUtil.writeToLocal(videoBuffer,"/mnt/sdcard/test.hd");
         try {
-            InputStream inputStream = activity.getAssets().open("test.steam");
+            InputStream inputStream = activity.getAssets().open("test.hd");
             byte[] videoBuffer = EnDecryUtil.toByteArray(inputStream);
             inputStream.close();
             int version = android.os.Build.VERSION.SDK_INT;
