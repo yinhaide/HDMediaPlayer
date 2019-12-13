@@ -12,6 +12,8 @@ import android.support.annotation.RequiresApi;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.yhd.datasource.ByteMediaDataSource;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -116,14 +118,14 @@ public class MediaPlayerHelper{
 
     /**
      * 播放流视频
-     * @param mediaDataSource mediaDataSource
+     * @param videoBuffer videoBuffer
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void playVideoDataSource (MediaDataSource mediaDataSource) {
+    public void playVideoDataSource (byte[] videoBuffer) {
         if(isHolderCreate){
-            beginPlayDataSource(mediaDataSource);
+            beginPlayDataSource(new ByteMediaDataSource(videoBuffer));
         }else{
-            setOnHolderCreateListener(() ->  beginPlayDataSource(mediaDataSource));
+            setOnHolderCreateListener(() ->  beginPlayDataSource(new ByteMediaDataSource(videoBuffer)));
         }
     }
 

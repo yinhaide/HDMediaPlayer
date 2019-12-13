@@ -1,9 +1,6 @@
 package com.yhd.mediaplayer.app.frag;
 
-import android.content.res.AssetManager;
-import android.media.MediaDataSource;
 import android.os.Build;
-import android.os.Environment;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.SurfaceView;
@@ -14,16 +11,10 @@ import com.de.rocket.ue.injector.BindView;
 import com.de.rocket.ue.injector.Event;
 import com.yhd.mediaplayer.MediaPlayerHelper;
 import com.yhd.mediaplayer.app.R;
+import com.yhd.utils.EnDecryUtil;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.RandomAccessFile;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
 
 /**
  * 双波浪曲线
@@ -37,8 +28,6 @@ public class Frag_mediaplayer extends RoFragment {
 
     @BindView(R.id.surfaceView)
     private SurfaceView surfaceView;
-
-    private volatile byte[] videoBuffer;
 
     @Override
     public int onInflateLayout() {
@@ -77,22 +66,8 @@ public class Frag_mediaplayer extends RoFragment {
                             activity.runOnUiThread(() -> toast("视频准备好了:" + args[0]));
                         }
                     }
-                });
-                //.playAssetVideo(activity,"test.mp4");//开始播放
-        AssetManager assetMg= activity.getAssets();
-        InputStream inputStream = null;
-        try {
-            inputStream = assetMg.open("test_encry.mp4");
-            videoBuffer = toByteArray(inputStream);
-            Log.v("yhd-","videoBuffer:"+videoBuffer.length);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if(videoBuffer != null){
-            videoBuffer = deEncrypt(videoBuffer);
-            UrlMediaDataSource mediaDataSource = new UrlMediaDataSource();
-            MediaPlayerHelper.getInstance() .playVideoDataSource(mediaDataSource);
-        }
+                })
+                .playAssetVideo(activity,"test.mp4");//开始播放
     }
 
     @Override
@@ -125,9 +100,20 @@ public class Frag_mediaplayer extends RoFragment {
         MediaPlayerHelper.getInstance().getMediaPlayer().start();
     }
 
-    @Event(R.id.resetButton)
-    private void reset(View view){
-        MediaPlayerHelper.getInstance().playAssetVideo(activity,"test.mp4");
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Event(R.id.encryButton)
+    private void encry(View view){
+        //写入加密字节流到指定文件
+        //byte[] videoBuffer = EnDecryUtil.deEncrypt("/mnt/sdcard/test.mp4");
+        //EnDecryUtil.writeToLocal(videoBuffer,"/mnt/sdcard/test.steam");
+        try {
+            InputStream inputStream = activity.getAssets().open("test.steam");
+            byte[] videoBuffer = EnDecryUtil.toByteArray(inputStream);
+            MediaPlayerHelper.getInstance().playVideoDataSource(EnDecryUtil.deEncrypt(videoBuffer));
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void onStop(){
@@ -141,122 +127,4 @@ public class Frag_mediaplayer extends RoFragment {
         MediaPlayerHelper.getInstance().release();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public class UrlMediaDataSource extends MediaDataSource {
-
-        public UrlMediaDataSource() {
-
-        }
-
-        @Override
-        public long getSize() {
-            synchronized (videoBuffer) {
-                return videoBuffer.length;
-            }
-        }
-
-        @Override
-        public int readAt(long position, byte[] buffer, int offset, int size) {
-            synchronized (videoBuffer){
-                int length = videoBuffer.length;
-                if (position >= length) {
-                    return -1; // -1 indicates EOF
-                }
-                if (position + size > length) {
-                    size -= (position + size) - length;
-                }
-                System.arraycopy(videoBuffer, (int)position, buffer, offset, size);
-                return size;
-            }
-        }
-
-        @Override
-        public void close() {
-
-        }
-    }
-
-    public static byte[] toByteArray(InputStream input) throws IOException {
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        byte[] buffer = new byte[4096];
-        int n = 0;
-        while (-1 != (n = input.read(buffer))) {
-            output.write(buffer, 0, n);
-        }
-        return output.toByteArray();
-    }
-
-    private final int REVERSE_LENGTH = 100;
-    /**
-     * 加解密
-     *
-     * @param strFile 源文件绝对路径
-     * @return
-     */
-    private boolean encrypt(String strFile) {
-        int len = REVERSE_LENGTH;
-        try {
-            File f = new File(strFile);
-            RandomAccessFile raf = new RandomAccessFile(f, "rw");
-            long totalLen = raf.length();
-            if (totalLen < REVERSE_LENGTH)
-                len = (int) totalLen;
-            FileChannel channel = raf.getChannel();
-            MappedByteBuffer buffer = channel.map(FileChannel.MapMode.READ_WRITE, 0, REVERSE_LENGTH);
-            byte tmp;
-            for (int i = 0; i < len; ++i) {
-                byte rawByte = buffer.get(i);
-                tmp = (byte) (rawByte ^ i);
-                buffer.put(i, tmp);
-            }
-            buffer.force();
-            buffer.clear();
-            channel.close();
-            raf.close();
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    /**
-     * 对流进行异或运算，两次运算就可以变回原来的
-     *
-     * @param bufferData 数据源字节流
-     * @return 异或运算之后的字节流
-     */
-    private byte[] deEncrypt(byte[] bufferData){
-        int REVERSE_LENGTH = 100;
-        if(bufferData != null && bufferData.length > REVERSE_LENGTH){
-            for(int i = 0;i < REVERSE_LENGTH ; ++i){
-                bufferData[i] = (byte) (bufferData[i] ^ i);
-            }
-        }
-        return bufferData;
-    }
-
-    /**
-     * 将流写到指定文件
-     *
-     * @param buffer 数据源字节流
-     * @param filePath 目标文件
-     */
-    private void writeToLocal(byte[] buffer,String filePath){
-        OutputStream out = null;
-        File file = new File(filePath);
-        try {
-            //创建文件
-            if(file.exists()){
-                file.delete();
-            }
-            file.createNewFile();
-            out = new FileOutputStream(file);
-            out.write(buffer);
-            out.flush();
-            out.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

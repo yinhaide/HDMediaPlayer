@@ -58,8 +58,8 @@
             android:onClick="onEditClick"
             android:layout_height="wrap_content" />
         <Button
-            android:id="@+id/resetButton"
-            android:text="重新开始"
+            android:id="@+id/encryButton"
+            android:text="播放加密的视频"
             android:layout_width="wrap_content"
             android:onClick="onEditClick"
             android:layout_height="wrap_content" />
