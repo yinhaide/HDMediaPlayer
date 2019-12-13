@@ -16,7 +16,9 @@ public class EnDecryUtil {
 
     //需要加密的字节流前多少位，这些字节流将和它对应的顺序下标index异或运算
     public static final int REVERSE_LENGTH = 100;
+    //解密文件输出的后缀
     public static final String SUFFIX = "hd";
+    //解密文件输出的后缀
     public static final String MP4 = "mp4";
 
     /**

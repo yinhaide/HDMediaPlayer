@@ -17,6 +17,10 @@
 
 + **支持播放网络流媒体(仅限上述格式)**
 
++ **支持对字节流的播放，用于视频的加解密方案(不会产生缓存文件)**
+
++ **提供完整的视频流加解密输出与播放的案例**
+
 ## 如何快速集成
 
 ### 导入方式
@@ -31,7 +35,7 @@ allprojects {
 ```
 在应用级别的**build.gradle**添加
 ```
-api 'com.github.yinhaide:HDMediaPlayer:0.1.0'
+api 'com.github.yinhaide:HDMediaPlayer:0.1.2'
 ```
 
 ### 如何使用
@@ -41,7 +45,6 @@ api 'com.github.yinhaide:HDMediaPlayer:0.1.0'
 ```
 MediaPlayerHelper.getInstance().setSurfaceView(surfaceView).playAssetVideo(context,"test.mp4");
 ```
-
 
 * 一行代码实现播放Assets目录下的mp3:
 
@@ -55,8 +58,13 @@ MediaPlayerHelper.getInstance().playAssetMusic(context,"test.mp3");
 /**
  * urlString 可为网络流媒体连接，也可以为本地存储全路径链接
  */
-MediaPlayerHelper.getInstance().setSurfaceView(surfaceView).playLocal(urlString);
-MediaPlayerHelper.getInstance().setSurfaceView(surfaceView).playUrl(urlString);
+MediaPlayerHelper.getInstance().setSurfaceView(surfaceView).playLocal(context,urlString);
+MediaPlayerHelper.getInstance().setSurfaceView(surfaceView).playUrl(context,urlString);
+```
+
+* 一行代码实现播放字节流(用于读取加密字节流，经过解密之后直接播放，不产生缓存文件):
+```
+MediaPlayerHelper.getInstance().setSurfaceView(surfaceView).playVideoDataSource (byte[] videoBuffer);
 ```
 
 * 如果想得到详细的回调信息：
