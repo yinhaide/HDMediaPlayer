@@ -93,7 +93,7 @@ public class MediaPlayerHelper{
      */
     public void playLocal(Context context,final String localPath) {
         if(checkAvalable(localPath)){
-            playUrl(context,localPath);
+            beginPlayUrl(context,localPath);
         }else{
             onStatusCallbackNext(CallBackState.FORMATE_NOT_SURPORT, localPath);
         }
