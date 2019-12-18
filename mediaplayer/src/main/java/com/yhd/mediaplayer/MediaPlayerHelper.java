@@ -5,7 +5,6 @@ import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.media.MediaDataSource;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
@@ -13,10 +12,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.yhd.datasource.ByteMediaDataSource;
-
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * 多媒体播放
@@ -88,15 +83,16 @@ public class MediaPlayerHelper{
     }
 
     /**
-     * 通过文件路径播放音视频
-     * @param localPath 路径
+     * 通过Assets文件名播放Assets目录下的音频
+     * @param context 引用
+     * @param assetName 名字,带后缀，比如:text.mp3
      */
-    public void playLocal(Context context,final String localPath) {
-        if(checkAvalable(localPath)){
-            beginPlayUrl(context,localPath);
-        }else{
-            onStatusCallbackNext(CallBackState.FORMATE_NOT_SURPORT, localPath);
+    public void playAssetMusic(Context context, String assetName) {
+        if(!checkAvalable(assetName)){
+            onStatusCallbackNext(CallBackState.FORMATE_NOT_SURPORT, assetName);
+            return;
         }
+        beginPlayAsset(context,assetName);
     }
 
     /**
@@ -104,7 +100,7 @@ public class MediaPlayerHelper{
      * @param context 引用
      * @param assetName 名字,带后缀，比如:text.mp3
      */
-    public void playAssetVideo (Context context, String assetName) {
+    public void playAssetVideo(Context context, String assetName) {
         if(!checkAvalable(assetName)){
             onStatusCallbackNext(CallBackState.FORMATE_NOT_SURPORT, assetName);
             return;
@@ -113,6 +109,27 @@ public class MediaPlayerHelper{
             beginPlayAsset(context,assetName);
         }else{
             setOnHolderCreateListener(() -> beginPlayAsset(context,assetName));
+        }
+    }
+
+    /**
+     * 通过文件路径播放音视频
+     * @param localPath 路径
+     */
+    public void playMusic(Context context,final String localPath) {
+        beginPlayUrl(context,localPath);
+    }
+
+    /**
+     * 网络路径播放音视频
+     * @param context 路径
+     * @return 是否成功
+     */
+    public void playVideo(Context context,final String path) {
+        if(isHolderCreate){
+            beginPlayUrl(context,path);
+        }else{
+            setOnHolderCreateListener(() -> beginPlayUrl(context,path));
         }
     }
 
@@ -126,32 +143,6 @@ public class MediaPlayerHelper{
             beginPlayDataSource(new ByteMediaDataSource(videoBuffer));
         }else{
             setOnHolderCreateListener(() ->  beginPlayDataSource(new ByteMediaDataSource(videoBuffer)));
-        }
-    }
-
-    /**
-     * 通过Assets文件名播放Assets目录下的音频
-     * @param context 引用
-     * @param assetName 名字,带后缀，比如:text.mp3
-     */
-    public void playAssetMusic (Context context, String assetName) {
-        if(!checkAvalable(assetName)){
-            onStatusCallbackNext(CallBackState.FORMATE_NOT_SURPORT, assetName);
-            return;
-        }
-        beginPlayAsset(context,assetName);
-    }
-
-    /**
-     * 网络路径播放音视频
-     * @param context 路径
-     * @return 是否成功
-     */
-    public void playUrl(Context context,final String path) {
-        if(isHolderCreate){
-            beginPlayUrl(context,path);
-        }else{
-            setOnHolderCreateListener(() -> beginPlayUrl(context,path));
         }
     }
 
@@ -291,25 +282,6 @@ public class MediaPlayerHelper{
     }
 
     /**
-     * 检查是否可以播放
-     * @param path 参数
-     * @return 结果
-     */
-    private boolean checkAvalable(String path){
-        boolean surport=false;
-        for(int i=0;i<ext.length;i++){
-            if(path.endsWith(ext[i])){
-                surport=true;
-            }
-        }
-        if(!surport){
-            onStatusCallbackNext(CallBackState.FORMATE_NOT_SURPORT, uiHolder.player);
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * 播放
      * @param path 参数
      */
@@ -374,6 +346,25 @@ public class MediaPlayerHelper{
         } catch (Exception e) {
             onStatusCallbackNext(CallBackState.ERROR, e.toString());
         }
+    }
+
+    /**
+     * 检查是否可以播放
+     * @param path 参数
+     * @return 结果
+     */
+    private boolean checkAvalable(String path){
+        boolean surport=false;
+        for (String s : ext) {
+            if (path.endsWith(s)) {
+                surport = true;
+            }
+        }
+        if(!surport){
+            onStatusCallbackNext(CallBackState.FORMATE_NOT_SURPORT, uiHolder.player);
+            return false;
+        }
+        return true;
     }
 
     /**

@@ -62,10 +62,6 @@ public class Frag_mediaplayer extends RoFragment {
                         if(args.length > 0){
                             toast("播放错误:" + args[0]);
                         }
-                    }else if(state== MediaPlayerHelper.CallBackState.PREPARE){
-                        if(args.length > 0){
-                            activity.runOnUiThread(() -> toast("视频准备好了:" + args[0]));
-                        }
                     }
                 })
                 .playAssetVideo(activity,"test.mp4");//开始播放
@@ -88,7 +84,7 @@ public class Frag_mediaplayer extends RoFragment {
 
     @Event(R.id.urlButton)
     private void playNetMP4(View view){
-        MediaPlayerHelper.getInstance().playUrl(activity,URL);
+        MediaPlayerHelper.getInstance().playVideo(activity,URL);
     }
 
     @Event(R.id.stopButton)
@@ -123,7 +119,7 @@ public class Frag_mediaplayer extends RoFragment {
                 //将流解密存到本地
                 EnDecryUtil.writeToLocal(EnDecryUtil.deEncrypt(videoBuffer),videoPath);
                 if(videoFile.exists()){
-                    MediaPlayerHelper.getInstance().playUrl(activity,videoPath);
+                    MediaPlayerHelper.getInstance().playVideo(activity,videoPath);
                 }else{
                     MediaPlayerHelper.getInstance().playAssetVideo(activity,"test.mp4");
                 }
