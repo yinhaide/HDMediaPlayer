@@ -53,7 +53,7 @@ public class EnDecryUtil {
      */
     public static byte[] deEncrypt(byte[] bufferData){
         if(bufferData != null && bufferData.length > REVERSE_LENGTH){
-            for(int i = 0;i < REVERSE_LENGTH ; ++i){
+            for(int i = 0;i < REVERSE_LENGTH ; i++){
                 bufferData[i] = (byte) (bufferData[i] ^ i);
             }
         }
