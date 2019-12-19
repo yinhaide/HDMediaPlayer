@@ -110,7 +110,7 @@ public class Frag_mediaplayer extends RoFragment {
             //如果会Android6.0及以上则解密流进行播放
             if (version >= Build.VERSION_CODES.M) {
                 // 播放加密的视频流
-                MediaPlayerHelper.getInstance().playVideoDataSource(EnDecryUtil.deEncrypt(videoBuffer),true);
+                MediaPlayerHelper.getInstance().playByte(EnDecryUtil.deEncrypt(videoBuffer),true);
             }else{
                 //如果是Android6.0以下，则先解密然后存到本地再播放
                 //为了不让用户看到，存缓存文件为.temp，名字唯一

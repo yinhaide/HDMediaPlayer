@@ -124,7 +124,7 @@ public class MediaPlayerHelper{
      * @param videoBuffer videoBuffer
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void playVideoDataSource(byte[] videoBuffer,boolean isVideo) {
+    public void playByte(byte[] videoBuffer, boolean isVideo) {
         if(isVideo){
             if(isHolderCreate){
                 beginPlayDataSource(new ByteMediaDataSource(videoBuffer));
