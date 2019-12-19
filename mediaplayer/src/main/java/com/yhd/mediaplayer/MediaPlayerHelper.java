@@ -87,49 +87,35 @@ public class MediaPlayerHelper{
      * @param context 引用
      * @param assetName 名字,带后缀，比如:text.mp3
      */
-    public void playAssetMusic(Context context, String assetName) {
+    public void playAsset(Context context,String assetName,boolean isVideo) {
         if(!checkAvalable(assetName)){
             onStatusCallbackNext(CallBackState.FORMATE_NOT_SURPORT, assetName);
             return;
         }
-        beginPlayAsset(context,assetName);
-    }
-
-    /**
-     * 通过Assets文件名播放Assets目录下视频
-     * @param context 引用
-     * @param assetName 名字,带后缀，比如:text.mp3
-     */
-    public void playAssetVideo(Context context, String assetName) {
-        if(!checkAvalable(assetName)){
-            onStatusCallbackNext(CallBackState.FORMATE_NOT_SURPORT, assetName);
-            return;
-        }
-        if(isHolderCreate){
-            beginPlayAsset(context,assetName);
+        if(isVideo){
+            if(isHolderCreate){
+                beginPlayAsset(context,assetName);
+            }else{
+                setOnHolderCreateListener(() -> beginPlayAsset(context,assetName));
+            }
         }else{
-            setOnHolderCreateListener(() -> beginPlayAsset(context,assetName));
+            beginPlayAsset(context,assetName);
         }
     }
 
     /**
      * 通过文件路径播放音视频
-     * @param localPath 路径
+     * @param path 路径
      */
-    public void playMusic(Context context,final String localPath) {
-        beginPlayUrl(context,localPath);
-    }
-
-    /**
-     * 网络路径播放音视频
-     * @param context 路径
-     * @return 是否成功
-     */
-    public void playVideo(Context context,final String path) {
-        if(isHolderCreate){
-            beginPlayUrl(context,path);
+    public void playUrl(Context context,final String path,boolean isVideo) {
+        if(isVideo){
+            if(isHolderCreate){
+                beginPlayUrl(context,path);
+            }else{
+                setOnHolderCreateListener(() -> beginPlayUrl(context,path));
+            }
         }else{
-            setOnHolderCreateListener(() -> beginPlayUrl(context,path));
+            beginPlayUrl(context,path);
         }
     }
 
@@ -138,11 +124,15 @@ public class MediaPlayerHelper{
      * @param videoBuffer videoBuffer
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void playVideoDataSource (byte[] videoBuffer) {
-        if(isHolderCreate){
-            beginPlayDataSource(new ByteMediaDataSource(videoBuffer));
+    public void playVideoDataSource(byte[] videoBuffer,boolean isVideo) {
+        if(isVideo){
+            if(isHolderCreate){
+                beginPlayDataSource(new ByteMediaDataSource(videoBuffer));
+            }else{
+                setOnHolderCreateListener(() ->  beginPlayDataSource(new ByteMediaDataSource(videoBuffer)));
+            }
         }else{
-            setOnHolderCreateListener(() ->  beginPlayDataSource(new ByteMediaDataSource(videoBuffer)));
+            beginPlayDataSource(new ByteMediaDataSource(videoBuffer));
         }
     }
 

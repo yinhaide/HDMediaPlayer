@@ -64,7 +64,7 @@ public class Frag_mediaplayer extends RoFragment {
                         }
                     }
                 })
-                .playAssetVideo(activity,"test.mp4");//开始播放
+                .playAsset(activity,"test.mp4",true);//开始播放
     }
 
     @Override
@@ -74,17 +74,17 @@ public class Frag_mediaplayer extends RoFragment {
 
     @Event(R.id.assetsMP3Button)
     private void playassetMP3(View view){
-        MediaPlayerHelper.getInstance().playAssetMusic(activity,"test.mp3");
+        MediaPlayerHelper.getInstance().playAsset(activity,"test.mp3",false);
     }
 
     @Event(R.id.assetsMP4Button)
     private void playAssetMP4(View view){
-        MediaPlayerHelper.getInstance().playAssetVideo(activity,"test.mp4");
+        MediaPlayerHelper.getInstance().playAsset(activity,"test.mp4",true);
     }
 
     @Event(R.id.urlButton)
     private void playNetMP4(View view){
-        MediaPlayerHelper.getInstance().playVideo(activity,URL);
+        MediaPlayerHelper.getInstance().playUrl(activity,URL,true);
     }
 
     @Event(R.id.stopButton)
@@ -110,7 +110,7 @@ public class Frag_mediaplayer extends RoFragment {
             //如果会Android6.0及以上则解密流进行播放
             if (version >= Build.VERSION_CODES.M) {
                 // 播放加密的视频流
-                MediaPlayerHelper.getInstance().playVideoDataSource(EnDecryUtil.deEncrypt(videoBuffer));
+                MediaPlayerHelper.getInstance().playVideoDataSource(EnDecryUtil.deEncrypt(videoBuffer),true);
             }else{
                 //如果是Android6.0以下，则先解密然后存到本地再播放
                 //为了不让用户看到，存缓存文件为.temp，名字唯一
@@ -119,9 +119,9 @@ public class Frag_mediaplayer extends RoFragment {
                 //将流解密存到本地
                 EnDecryUtil.writeToLocal(EnDecryUtil.deEncrypt(videoBuffer),videoPath);
                 if(videoFile.exists()){
-                    MediaPlayerHelper.getInstance().playVideo(activity,videoPath);
+                    MediaPlayerHelper.getInstance().playUrl(activity,videoPath,true);
                 }else{
-                    MediaPlayerHelper.getInstance().playAssetVideo(activity,"test.mp4");
+                    MediaPlayerHelper.getInstance().playAsset(activity,"test.mp4",true);
                 }
             }
         } catch (IOException e) {
