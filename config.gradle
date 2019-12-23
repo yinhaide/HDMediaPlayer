@@ -19,5 +19,6 @@ ext {
             recyclerview    : 'com.android.support:recyclerview-v7:28.0.0',
             fastjson        : 'com.alibaba:fastjson:1.2.58',
             multidex        : 'com.android.support:multidex:1.0.1',
+            rocket          : 'rocket-v0.0.2'
     ]
 }
