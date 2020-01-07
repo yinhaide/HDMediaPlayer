@@ -7,7 +7,7 @@ def library = rootProject.ext.dependencies
 android {
     compileSdkVersion info.compileSdkVersion
     defaultConfig {
-        applicationId "com.yhd.wave.app"
+        applicationId "com.yhd.mediaplayer.app"
         minSdkVersion info.minSdkVersion
         targetSdkVersion info.targetSdkVersion
         versionCode info.versionCode
@@ -29,6 +29,7 @@ android {
     /*混淆*/
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -80,8 +81,14 @@ dependencies {
     //api 'com.github.yinhaide:HDMediaPlayer:0.0.9'
     api project(':mediaplayer')
     //文件流的加密解密的解决方案
-    api 'com.github.yinhaide:SteamEnDecry:0.0.7'
+    api 'com.github.yinhaide:SteamEnDecry:0.0.9'
     // 架构包,单Activity多Fragment框架(https://github.com/yinhaide/HDRocket),想要Android进阶的童鞋，值得推荐学习~
     api(name: library.rocket, ext: 'aar')
     //api 'com.github.yinhaide:HDRocket:0.0.4'
+    //第三方视频方案
+    //api 'cn.yc:YCVideoPlayerLib:2.6.6'
+    // 必选，内部默认使用系统mediaplayer进行解码
+    api 'com.github.dueeeke.dkplayer:dkplayer-java:3.2.2'
+    // 可选，使用ijkplayer进行解码
+    api 'com.github.dueeeke.dkplayer:player-ijk:3.2.2'
 }

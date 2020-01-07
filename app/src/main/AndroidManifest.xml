@@ -6,6 +6,8 @@
     <!-- 读写 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!--播放流网络媒体需要-->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:hardwareAccelerated="true"
@@ -20,6 +22,7 @@
         android:screenOrientation="landscape">
         <activity
             android:name="com.yhd.mediaplayer.app.activity.MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -9,11 +9,13 @@ import com.de.rocket.bean.StatusBarBean;
 import com.de.rocket.ue.activity.RoActivity;
 import com.yhd.mediaplayer.app.R;
 import com.yhd.mediaplayer.app.frag.Frag_mediaplayer;
+import com.yhd.mediaplayer.app.frag.Frag_test;
 
 public class MainActivity extends RoActivity {
 
     private Class[] roFragments = {
-            Frag_mediaplayer.class
+            Frag_mediaplayer.class,
+            Frag_test.class,
     };
 
     @Override
@@ -24,7 +26,7 @@ public class MainActivity extends RoActivity {
         activityParamBean.setSaveInstanceState(true);//页面重载是否要恢复之前的页面
         activityParamBean.setToastCustom(true);//用自定义的吐司风格
         activityParamBean.setRoFragments(roFragments);//需要注册Fragment列表
-        activityParamBean.setShowViewBall(true);//是否显示悬浮球
+        activityParamBean.setShowViewBall(false);//是否显示悬浮球
         activityParamBean.setRecordBean(new RecordBean(true,true,true,7));//日志策略
         activityParamBean.setEnableCrashWindow(true);//是否隐藏框架自定义的崩溃的窗口
         activityParamBean.setStatusBar(new StatusBarBean(true, Color.argb(0, 0, 0, 0)));//状态栏

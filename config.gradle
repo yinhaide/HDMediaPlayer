@@ -5,7 +5,7 @@ ext {
             buildToolsVersion: "28.0.3",
             compileSdkVersion: 28,
             minSdkVersion    : 19,
-            targetSdkVersion : 22,//22 可以绕过6.0动态获取权限
+            targetSdkVersion : 26,//22 可以绕过6.0动态获取权限
             versionCode      : 1,
             versionName      : "0.0.1",
             multiDexEnabled  : true

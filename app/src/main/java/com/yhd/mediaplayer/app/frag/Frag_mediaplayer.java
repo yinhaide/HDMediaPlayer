@@ -25,7 +25,7 @@ public class Frag_mediaplayer extends RoFragment {
 
     private static final String TAG = "MainActivity";
     private final static String URL = "https://github.com/yinhaide/HDMediaPlayer/blob/master/app/src/main/assets/demo.mp4";
-    private final static String URL2 = "https://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear1/fileSequence0.ts";
+    private final static String URL2 = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
 
     @BindView(R.id.surfaceView)
     private SurfaceView surfaceView;
@@ -84,7 +84,7 @@ public class Frag_mediaplayer extends RoFragment {
 
     @Event(R.id.urlButton)
     private void playNetMP4(View view){
-        MediaPlayerHelper.getInstance().playUrl(activity,URL,true);
+        MediaPlayerHelper.getInstance().playUrl(activity,URL2,true);
     }
 
     @Event(R.id.stopButton)
